@@ -11,6 +11,13 @@ contract FlightSuretyData {
 
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
+    mapping(address => bool) private authorizedContracts;
+    mapping(address => bool) private registeredAirlines;
+    uint8 private totalAirlines = 0;
+    address[] private votes;
+    mapping(address => uint) private airlineFunds;
+    mapping(bytes32 => mapping(address => uint)) private PassengersInsurances;
+    mapping(address => uint) private passengersBalance;
 
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
@@ -23,6 +30,7 @@ contract FlightSuretyData {
     */
     constructor(address firstAirline) public{
         contractOwner = msg.sender;
+        registerAirline(firstAirline);
     }
 
     /********************************************************************************************/
@@ -52,6 +60,22 @@ contract FlightSuretyData {
         _;
     }
 
+    /**
+    * @dev Modifier that requires the caller contract to be authorized
+    */
+    modifier requireIsContractAuthorized() {
+        require(authorizedCallerContracts[msg.sender] == true, "Contract not authorized to call this contract");
+        _;
+    }
+
+     /**
+    * @dev Modifier that requires the airline to be registered
+    */
+    modifier requireIsAirlineRegistered(address airline) {
+        require(isAirlineRegistered(airline), "Airline not registered");
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
@@ -61,28 +85,40 @@ contract FlightSuretyData {
     *
     * @return A bool that is the current operating status
     */
-    function isOperational()
-                            public
-                            view
-                            returns(bool)
-    {
+    function isOperational() public view returns(bool){
         return operational;
     }
-
 
     /**
     * @dev Sets contract operations on/off
     *
     * When operational mode is disabled, all write transactions except for this one will fail
     */
-    function setOperatingStatus
-                            (
-                                bool mode
-                            )
-                            external
-                            requireContractOwner
-    {
+    function setOperatingStatus(bool mode) external requireContractOwner{
         operational = mode;
+    }
+
+    function isAirlineRegistered(address airline) public view returns(bool){
+        return registeredAirlines[airline];
+    }
+
+    function authorizeContract(address contractAddress) external requireContractOwner{
+        authorizedContracts[contractAddress] = true;
+    }
+
+    function deAuthorizeContract(address contractAddress) external requireContractOwner{
+        delete authorizedContracts[contractAddress];
+    }
+
+    function isPassengerInsuredForFlight(
+                                    address airline,
+                                    string flight,
+                                    uint256 timestamp,
+                                    address passenger
+                                )
+                                external view returns(bool){
+        bytes32 flightKey = getFlightKey(airline, flight, timestamp);
+        return PassengersInsurances[flightKey][passenger] > 0;
     }
 
     /********************************************************************************************/
@@ -94,12 +130,24 @@ contract FlightSuretyData {
     *      Can only be called from FlightSuretyApp contract
     *
     */
-    function registerAirline
-                            (
-                            )
-                            external
-                            pure
-    {
+    function registerAirline(address airline) external pure requireIsAirlineRegistered(msg.sender){
+        require(!isAirlineRegistered(airline), "Airline is already registered");
+        if (airlineCount <= 4) {
+            registeredAirlines[airline] = true;
+        }
+        else { // Need 50% consensys
+            for(uint i = 0; i < votes.length; i++) {
+                if(approvalVotes[i] == msg.sender) {
+                    require(true, "Duplicate vote");
+                }
+            }
+            if(votes.length >= SafeMath.div(totalAirlines, 2)) {
+                registeredAirlines[airline] = true;
+                delete approvalVotes;
+             } else {
+                votes.push(msg.sender);
+            }
+        }
     }
 
 
@@ -145,12 +193,8 @@ contract FlightSuretyData {
     *      resulting in insurance payouts, the contract should be self-sustaining
     *
     */
-    function fund
-                            (
-                            )
-                            public
-                            payable
-    {
+    function fund() public payable{
+        require(msg.value > 10 ether, "Caller has not sent enough funds to register");
     }
 
     function getFlightKey
