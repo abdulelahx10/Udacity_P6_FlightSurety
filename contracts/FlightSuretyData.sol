@@ -29,7 +29,7 @@ contract FlightSuretyData {
     */
     constructor(address firstAirline) public{
         contractOwner = msg.sender;
-        this.registerAirline(firstAirline);
+        airlines[firstAirline] = true;
     }
 
     /********************************************************************************************/
@@ -127,7 +127,7 @@ contract FlightSuretyData {
     *      Can only be called from FlightSuretyApp contract
     *
     */
-    function registerAirline(address airline) external pure
+    function registerAirline(address airline) external
     requireIsContractAuthorized()
     requireIsOperational()
     requireIsValidAddress(airline)
@@ -184,7 +184,7 @@ contract FlightSuretyData {
         address airline,
         string calldata flight,
         uint256 timestamp,
-        uint multipler) external pure
+        uint multipler) external
     {
         bytes32 flightKey = getFlightKey(airline, flight, timestamp);
         address[] storage insurees = flightInsurees[flightKey];
@@ -202,7 +202,7 @@ contract FlightSuretyData {
      *  @dev Transfers eligible payout funds to insuree
      *
     */
-    function pay(address payable passenger, uint amount) external pure
+    function pay(address payable passenger, uint amount) external
         requireIsContractAuthorized()
         requireIsOperational()
         requireIsValidAddress(passenger)

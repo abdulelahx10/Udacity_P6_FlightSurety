@@ -107,11 +107,11 @@ contract FlightSuretyApp {
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
 
-    function isOperational() public pure returns(bool){
+    function isOperational() public view returns(bool){
         return flightSuretyDataContract.isOperational();
     }
 
-    function isAirlineRegistered(address airline) public pure returns(bool){
+    function isAirlineRegistered(address airline) public view returns(bool){
         return flightSuretyDataContract.isAirlineRegistered(airline);
     }
 
@@ -126,7 +126,7 @@ contract FlightSuretyApp {
     * @dev Add an airline to the registration queue
     *
     */
-    function registerAirline(address airline) external pure
+    function registerAirline(address airline) external
     requireIsOperational()
     requireIsValidAddress(airline)
     requireIsAirlineRegistered(msg.sender)
@@ -181,8 +181,7 @@ contract FlightSuretyApp {
     *
     */
     function processFlightStatus(address airline, string memory flight, uint256 timestamp, uint8 statusCode)
-    internal
-    pure{
+    internal{
         if(statusCode == STATUS_CODE_LATE_AIRLINE) {
             flightSuretyDataContract.creditInsurees(airline, flight, timestamp, 150);
         }
