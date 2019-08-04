@@ -51,7 +51,7 @@ module.exports = {
         return new HDWalletProvider(mnemonic, "http://127.0.0.1:8545/", 0, 50);
       },
       network_id: "*",       // Any network (default: none)
-      gas: 9999999,
+      gas: 99999999,
       //host: "127.0.0.1",     // Localhost (default: none)
       //port: 8545,            // Standard Ethereum port (default: none)
     },

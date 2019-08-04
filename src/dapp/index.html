@@ -13,18 +13,94 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">FlightSurety</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-            aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
 
     <main class="container">
-
-        <div id="display-wrapper" class="top-20">
+        <div id="register-display-wrapper" class="top-20">
         </div>
-        <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+
+        <div class="form-group">
+            <h2>Airlines</h2>
+            <h5>Register Airline</h5>
+            <label for="registerAirlineAddress">Airline Address:</label>
+            <input type="text" id="registerAirlineAddress" placeholder="Enter wallet address">
+            <br />
+            <label for="registeredAirline">Registered Address:</label>
+            <input type="text" id="registeredAirline" placeholder="Enter wallet address">
+            <br />
+            <button class="btn btn-primary" id="registerAirline">Register</button>
+        </div>
+
+        <div class="form-group">
+
+            <h5>Submit Funds</h5>
+            <label for="fundsAirlineAddress">Airline Address:</label>
+            <input type="text" id="fundsAirlineAddress" placeholder="Enter wallet address">
+            <br />
+            <label for="fundsValue">Funds Value:</label>
+            <input type="number" id="fundsValue" placeholder="Enter Value (in ETH)">
+            <br />
+            <button class="btn btn-primary" id="submitFunds">Submit Funds</button>
+        </div>
+
+        <div class="form-group">
+
+            <h2>Passengers</h2>
+            <h5>Buy Insurance</h5>
+
+            <label for="passengerAddress">Passenger Address:</label>
+            <input type="text" id="passengerAddress" placeholder="Enter wallet address">
+            <br />
+            <label for="insuranceAirlineAddress">Airline Address:</label>
+            <input type="text" id="insuranceAirlineAddress" placeholder="Enter wallet address">
+
+            <br />
+            <label for="selectFlight">Flight:</label>
+            <select id="selectFlight" label="">
+                <option value="0" selected>Select a Flight</option>
+                <option value='{"flight":"FLIGHT001","timestamp":"201906291855"}'>FLIGHT001 - 201906291855</option>
+                <option value='{"flight":"FLIGHT002","timestamp":"201906260400"}'>FLIGHT002 - 201906260400</option>
+                <option value='{"flight":"FLIGHT003","timestamp":"201906260630"}'>FLIGHT003 - 201906260630</option>
+                <option value='{"flight":"FLIGHT004","timestamp":"201906260945"}'>FLIGHT004 - 201906260945</option>
+                <option value='{"flight":"FLIGHT005","timestamp":"201906241200"}'>FLIGHT005 - 201906241200</option>
+                <option value='{"flight":"FLIGHT006","timestamp":"201906251200"}'>FLIGHT006 - 201906251200</option>
+                <option value='{"flight":"FLIGHT007","timestamp":"201906261200"}'>FLIGHT007 - 201906261200</option>
+                <option value='{"flight":"FLIGHT008","timestamp":"201906241200"}'>FLIGHT008 - 201906241200</option>
+                <option value='{"flight":"FLIGHT009","timestamp":"201906211200"}'>FLIGHT009 - 201906211200</option>
+                <option value='{"flight":"FLIGHT010","timestamp":"201906220845"}'>FLIGHT010 - 201906220845</option>
+            </select>
+            <br />
+            <label for="insuranceValue">Insurance Value:</label>
+            <input type="number" id="insuranceValue" placeholder="Enter Value (in ETH)">
+            <br />
+            <button class="btn btn-primary" id="buyInsurance">Buy Insurance</button>
+        </div>
+
+        <div class="form-group">
+            <h5>Withdraw Funds</h5>
+
+            <label for="insureeAddreess">Passenger Address:</label>
+            <input type="text" id="insureeAddreess" placeholder="Enter wallet address">
+            <br />
+            <label for="value">Value:</label>
+            <input type="number" id="value" placeholder="Enter Value (in ETH)">
+            <br />
+            <button class="btn btn-primary" id="withdrawFunds">Request</button>
+
+        </div>
+        <div class="form-group">
+            <h2>Submit Oracle</h2>
+            
+            <label class="form">Flight</label>
+            <input type="text" id="flight-number">
+            
+            <button class="btn btn-primary" id="submit-oracle">Submit to Oracles</button>
+            <div id="display-wrapper" class="top-20"></div>
+
         </div>
     </main>
 

@@ -4,12 +4,8 @@ import Config from './config.json';
 import Web3 from 'web3';
 import express from 'express';
 
-const STATUS_CODE_UNKNOWN = 0
-const STATUS_CODE_ON_TIME = 10
+const STATUS_CODES = [0, 10, 20, 30, 40, 50];
 const STATUS_CODE_LATE_AIRLINE = 20
-const STATUS_CODE_LATE_WEATHER = 30
-const STATUS_CODE_LATE_TECHNICAL = 40
-const STATUS_CODE_LATE_OTHER = 50
 
 const TOTAL_ORACLES = 20
 let oracles = {}
@@ -69,20 +65,22 @@ flightSuretyApp.events.OracleRequest({
       for (var key in oracles) {
         var indexes = oracles[key]
         if (indexes.includes(index)) {
+          let STATUS_CODE = STATUS_CODES[Math.floor(Math.random()*items.length)]
           flightSuretyApp.methods
             .submitOracleResponse(
               index,
               airline,
               flight,
               timestamp,
+              // STATUS_CODE
               STATUS_CODE_LATE_AIRLINE // always late for testing
             )
             .send({ from: key, gas: 1000000 })
             .then(result => {
-              console.log('Oracle response sent with statuscode: ' + STATUS_CODE_LATE_AIRLINE + ' for ' + flight + ' and index:' + index);
+              console.log('RESEULT - statuscode:' + STATUS_CODE_LATE_AIRLINE + ', flight: ' + flight + ', index:' + index);
             })
             .catch(error => {
-              console.log('Error while sending Oracle response  for ' + flight + ' Error:' + error);
+              console.log('ERROR - flight:' + flight + ', MSG:' + error);
             })
         }
       }

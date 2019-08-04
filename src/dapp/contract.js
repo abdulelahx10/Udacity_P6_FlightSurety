@@ -56,12 +56,13 @@ export default class Contract {
 
     registerAirline(registeredAirline, airlineToBeRegistered, callback) {
         let self = this
-    
+
         self.flightSuretyApp.methods
           .registerAirline(airlineToBeRegistered.toString())
           .send(
             { from: registeredAirline.toString(), gas: 1000000 },
             (error, result) => {
+              // console.log(error);
               callback(error, result)
             }
           )
@@ -80,12 +81,12 @@ export default class Contract {
           )
       }
     
-      purchaseInsurance(airline, flight, passenger, funds_ether, timestamp, callback) {
+      buyInsurance(airline, flight, timestamp, passenger, funds_ether, callback) {
         let self = this
         const fundAmount = self.web3.utils.toWei(funds_ether, 'ether')
     
         self.flightSuretyApp.methods
-          .registerFlight(airline.toString(), flight.toString(), timestamp)
+          .buyFlightInsurance(airline.toString(), flight.toString(), timestamp)
           .send(
             { from: passenger.toString(), value: fundAmount, gas: 1000000 },
             (error, result) => {
@@ -94,19 +95,21 @@ export default class Contract {
           )
       }
       
-      getPassengerBalance (passenger, callback) {
-        let self = this
+      // getPassengerBalance (passenger, callback) {
+      //   let self = this
 
-        self.flightSuretyApp.methods
-          .getPassengerBalance()
-          .call({ from: passenger }, (error, result) => {
-            callback(error, result)
-          })
-      }
+      //   self.flightSuretyApp.methods
+      //     .getPassengerBalance()
+      //     .call({ from: passenger }, (error, result) => {
+      //       callback(error, result)
+      //     })
+      // }
 
       withdrawFunds (passenger, funds, callback) {
         let self = this
     
+        console.log('f: ',funds);
+        
         const amount = self.web3.utils.toWei(funds, 'ether')
         self.flightSuretyApp.methods
           .withdrawFunds(amount)
